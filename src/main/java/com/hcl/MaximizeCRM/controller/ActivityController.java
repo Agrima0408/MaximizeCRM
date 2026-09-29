@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ActivityController {
     private ActivityService activityService;
-    @Autowired
-    public void setActivityService(ActivityService activityService) {
+    
+    public ActivityController(ActivityService activityService) {
         this.activityService = activityService;
     }
 }

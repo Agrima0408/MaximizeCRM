@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class OpportunityController {
     private OpportunityService opportunityService;
-    public void setOppotunityService(OpportunityService oppotunityService) {
+    public OpportunityController(OpportunityService oppotunityService) {
         this.opportunityService = oppotunityService;
     }
 }

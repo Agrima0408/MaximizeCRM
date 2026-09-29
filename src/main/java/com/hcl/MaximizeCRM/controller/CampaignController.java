@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CampaignController {
     private CampaignService campaignService;
-    @Autowired
-    public void setCampaignService(CampaignService campaignService) {
+    public CampaignController(CampaignService campaignService) {
         this.campaignService = campaignService;
     }
 }

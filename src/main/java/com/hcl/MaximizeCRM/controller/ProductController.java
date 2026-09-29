@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ProductController {
     private ProductService productService;
-    @Autowired
+
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
