@@ -1,0 +1,13 @@
+package com.hcl.MaximizeCRM;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class MaximizeCrmApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}
