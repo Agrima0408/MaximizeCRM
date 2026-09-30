@@ -1,10 +1,10 @@
 package com.hcl.MaximizeCRM.repository;
 
 
-import com.hcl.MaximizeCRM.model.Customer;
+import com.hcl.MaximizeCRM.model.Activity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ActivityRepository extends JpaRepository<Customer,Long> {
+public interface ActivityRepository extends JpaRepository<Activity,Long> {
 }

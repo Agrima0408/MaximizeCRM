@@ -3,6 +3,8 @@ package com.hcl.MaximizeCRM.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -25,20 +27,23 @@ public class Activity {
             joinColumns = @JoinColumn(name = "activity_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
-    @JsonManagedReference("activity-products")
-    private List<Product> products;
+    private List<Product> products = new ArrayList<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private enum ActivityTitle{
+    @NotNull
+    public enum ActivityTitle{
         CALL,
         MEETING,
         FOLLOW_UP;
     }
+    @NotBlank
     private String ActivityDescription;
+    @NotNull
     private LocalDate ActivityScheduledAt;
-    private enum ActivityStatus{
+    @NotNull
+    public enum ActivityStatus{
         PENDING,
         COMPLETED,
         CANCELLED;

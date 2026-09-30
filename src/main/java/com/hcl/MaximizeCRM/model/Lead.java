@@ -3,6 +3,8 @@ package com.hcl.MaximizeCRM.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,8 +16,12 @@ public class Lead {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
     private String LeadName;
+    @Email
+    @NotBlank
     private String LeadEmail;
+    @NotBlank
     private String LeadPhone;
     private enum LeadSource {
         WEBSITE,SOCIAL_MEDIA,ADVERTISEMENT,REFERRAL;

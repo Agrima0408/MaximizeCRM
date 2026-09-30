@@ -1,7 +1,11 @@
 package com.hcl.MaximizeCRM.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,16 +15,25 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
     private String productName;
     private String productDescription;
+    @NotNull
+    @PositiveOrZero
     private Double productPrice;
     private String productCategory;
+    @NotNull
+    @PositiveOrZero
     private Double productStock;
+    @NotNull
+    @PositiveOrZero
     private Double productDiscount;
+    @NotNull
+    @PositiveOrZero
     private Double productTotal;
 
     @ManyToMany(mappedBy = "products")
-    @JsonBackReference("activity-products")
+    @JsonIgnore
     private List<Activity> activities = new ArrayList<>();
 
     public Long getId() {

@@ -2,6 +2,8 @@ package com.hcl.MaximizeCRM.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,8 +16,12 @@ public class Customer {
     @Id
     @GeneratedValue
     private Long id;
+    @NotBlank
     private String CustomerName;
+    @Email
+    @NotBlank
     private String CustomerEmail;
+    @NotBlank
     private String CustomerPhone;
     private String CustomerAddress;
     private String CustomerCity;

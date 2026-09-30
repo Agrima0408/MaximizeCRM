@@ -2,6 +2,9 @@ package com.hcl.MaximizeCRM.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,18 +15,24 @@ public class Campaign {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
     private String CampaignName;
     private String CampaignDescription;
+    @NotNull
     private LocalDate CampaignStartDate;
+    @NotNull
     private LocalDate CampaignEndDate;
+    @NotNull
+    @PositiveOrZero
     private Long CampaignBudget;
-    private enum CampaignStatus{
+    public enum CampaignStatus{
         PLANNED,
         ACTIVE,
         COMPLETED,
         CANCELLED;
     }
     @Enumerated(EnumType.STRING)
+    @NotNull
     private CampaignStatus campaignStatus;
 
     @OneToMany(mappedBy = "campaignEntity")

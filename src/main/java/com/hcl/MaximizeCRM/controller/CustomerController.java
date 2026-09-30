@@ -4,6 +4,7 @@ package com.hcl.MaximizeCRM.controller;
 import com.hcl.MaximizeCRM.model.Customer;
 import com.hcl.MaximizeCRM.model.User;
 import com.hcl.MaximizeCRM.service.CustomerService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,7 @@ public class CustomerController {
     }
 
     @PostMapping("/api/customers")
-    public Customer save(@RequestBody Customer customer){
+    public Customer save(@Valid @RequestBody Customer customer){
         return customerService.save(customer);
     }
 

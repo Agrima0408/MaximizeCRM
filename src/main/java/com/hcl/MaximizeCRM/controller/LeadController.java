@@ -4,6 +4,7 @@ package com.hcl.MaximizeCRM.controller;
 import com.hcl.MaximizeCRM.model.Customer;
 import com.hcl.MaximizeCRM.model.Lead;
 import com.hcl.MaximizeCRM.service.LeadService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class LeadController {
     }
 
     @GetMapping("/api/leads/{id}")
-    public Optional<Lead> getLeadById(@PathVariable Long id){
+    public Optional<Lead> getLeadById(@Valid @PathVariable Long id){
         return leadService.findById(id);
     }
 
