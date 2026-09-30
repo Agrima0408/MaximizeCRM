@@ -3,7 +3,6 @@ package com.hcl.MaximizeCRM.service;
 
 import com.hcl.MaximizeCRM.model.User;
 import com.hcl.MaximizeCRM.repository.UserRepository;
-import jakarta.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +33,20 @@ public class UserService {
 
     public void deleteById(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public boolean login(String userEmail, String userPassword) {
+
+        Optional<User> user = userRepository.findByUserEmail(userEmail);
+
+        if (user.isEmpty()) {
+            return false;
+        }
+
+        return passwordEncoder.matches(
+                userPassword,
+                user.get().getUserPassword()
+        );
     }
     
 }
