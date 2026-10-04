@@ -34,3 +34,6 @@ build/
 
 .idea/
 target/
+
+# Application configuration / secrets
+src/main/resources/application.properties
