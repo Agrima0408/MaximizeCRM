@@ -30,6 +30,7 @@ public class Opportunity {
     private String Description;
     @NotNull
     @PositiveOrZero
+    @Column(name = "opportunity_value")
     private Long Value;
     public enum Status{
         OPEN,
