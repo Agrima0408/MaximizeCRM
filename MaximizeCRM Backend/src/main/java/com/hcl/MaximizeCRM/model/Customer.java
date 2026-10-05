@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +24,13 @@ public class Customer {
     private String CustomerPhone;
     private String CustomerAddress;
     private String CustomerCity;
-    private enum CustomerType {
-        New, Existing;
+    public enum CustomerType {
+        New,
+        Existing
     }
     @Enumerated(EnumType.STRING)
     private CustomerType CustomerType;
+
     private LocalDateTime CustomerCreatedAt;
 
     @OneToMany(mappedBy="customerEntity")

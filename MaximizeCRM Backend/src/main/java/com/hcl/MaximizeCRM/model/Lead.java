@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +22,13 @@ public class Lead {
     private String LeadEmail;
     @NotBlank
     private String LeadPhone;
-    private enum LeadSource {
-        WEBSITE,SOCIAL_MEDIA,ADVERTISEMENT,REFERRAL;
+    public enum LeadSource {
+        WEBSITE,
+        SOCIAL_MEDIA,
+        ADVERTISEMENT,
+        REFERRAL
     }
-    private enum LeadStatus{
+    public enum LeadStatus{
         PENDING,
         ACTIVE,
         ON_HOLD,

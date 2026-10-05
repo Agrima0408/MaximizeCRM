@@ -29,7 +29,7 @@ public class Campaign {
         PLANNED,
         ACTIVE,
         COMPLETED,
-        CANCELLED;
+        CANCELLED
     }
     @Enumerated(EnumType.STRING)
     @NotNull

@@ -32,26 +32,28 @@ public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
+
     public enum ActivityTitle{
         CALL,
         MEETING,
-        FOLLOW_UP;
+        FOLLOW_UP
     }
     @NotBlank
     private String ActivityDescription;
     @NotNull
     private LocalDate ActivityScheduledAt;
-    @NotNull
+
     public enum ActivityStatus{
         PENDING,
         COMPLETED,
-        CANCELLED;
+        CANCELLED
     }
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private ActivityTitle activityTitle;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private ActivityStatus activityStatus;
 

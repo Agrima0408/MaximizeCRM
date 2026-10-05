@@ -25,8 +25,11 @@ public class User {
     @NotBlank
     private String UserPassword;
     public enum UserRole {
-        Admin , Sales_Executive , Manager;
+        Admin ,
+        Sales_Executive ,
+        Manager
     }
+    @NotNull
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
     @NotNull

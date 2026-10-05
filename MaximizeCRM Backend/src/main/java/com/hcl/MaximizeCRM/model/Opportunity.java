@@ -32,6 +32,7 @@ public class Opportunity {
     @PositiveOrZero
     @Column(name = "opportunity_value")
     private Long Value;
+
     public enum Status{
         OPEN,
         NEGOTIATION,
