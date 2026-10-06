@@ -324,35 +324,23 @@ The frontend is in the `MaximizeCRM Frontend` folder. Start the backend first, t
 
 ---
 
-# Screenshots
-
-Screenshots of the application can be added to this section.
+## Screenshots
 
 ### Login
 
-```markdown
 ![Login](screenshots/login.png)
-```
 
 ### Dashboard / Main Interface
 
-```markdown
 ![Dashboard](screenshots/dashboard.png)
-```
 
 ### Swagger API Documentation
 
-```markdown
 ![Swagger](screenshots/swagger.png)
-```
 
 ### Database
 
-```markdown
 ![Database](screenshots/database.png)
-```
-
-Place the actual screenshot files inside a `screenshots` folder and update the filenames above accordingly.
 
 ---
 
