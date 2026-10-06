@@ -1,350 +1,384 @@
 # MaximizeCRM
 
-MaximizeCRM is a Customer Relationship Management (CRM) application developed using **Spring Boot, Java, PostgreSQL, and a web-based frontend**. The system helps manage customers, leads, opportunities, campaigns, activities, and products through REST APIs with JWT-based authentication.
+[![Maven Build](https://github.com/Agrima0408/MaximizeCRM/actions/workflows/maven-build.yml/badge.svg)](https://github.com/Agrima0408/MaximizeCRM/actions/workflows/maven-build.yml)
 
-## Project Overview
+MaximizeCRM is a Customer Relationship Management application for managing customers, leads, opportunities, campaigns, activities, and products through a secure REST API and a web frontend.
 
-The main objective of MaximizeCRM is to provide a centralized system for managing customer-related business activities.
+---
 
-The application supports:
+## Features
 
-- User management
-- Customer management
-- Lead management
-- Opportunity management
-- Campaign management
-- Activity management
-- Product management
-- JWT-based authentication
-- Input validation
-- RESTful APIs
-- PostgreSQL database integration
-- Swagger/OpenAPI API documentation
-- Automated build using GitHub Actions
+- User registration and login with JWT-based authentication
+- CRUD for customers, leads, opportunities, campaigns, activities, and products
+- Linked CRM data: users manage leads and opportunities, campaigns contain leads, leads generate opportunities
+- Input validation and global exception handling
+- Swagger/OpenAPI documentation for every endpoint
 
-## Technologies Used
+---
 
-### Backend
+## Tech Stack
 
-- Java 17
-- Spring Boot 3.2.5
-- Spring Web
-- Spring Data JPA
-- Spring Security
-- JWT Authentication
-- Hibernate
-- Jakarta Bean Validation
-- Lombok
-- Maven
+| Layer | Technologies |
+|---|---|
+| Backend | Java 17, Spring Boot 3.2.5, Spring Web, Spring Data JPA, Spring Security, Jakarta Bean Validation, JWT, Lombok, Maven |
+| Database | PostgreSQL 17, Hibernate / JPA |
+| Frontend | HTML, CSS, JavaScript |
+| Tools | IntelliJ IDEA, Git, GitHub, GitHub Actions, Swagger / OpenAPI |
 
-### Database
-
-- PostgreSQL 17
-- H2 Database for testing
-
-### API Documentation
-
-- Swagger / OpenAPI
-
-### Version Control & CI
-
-- Git
-- GitHub
-- GitHub Actions
+---
 
 ## Project Structure
 
 ```text
 MaximizeCRM
 │
-├── .github
-│   └── workflows
+├── .github/
+│   └── workflows/
 │       └── maven-build.yml
 │
-├── database
+├── database/
 │   ├── database.yml
 │   ├── Project-PPT
 │   └── Project-Report
 │
-├── MaximizeCRM Backend
-│   ├── src
-│   │   ├── main
-│   │   └── test
+├── MaximizeCRM Backend/
+│   ├── src/
 │   ├── pom.xml
 │   └── mvnw
 │
-└── MaximizeCRM Frontend
+├── MaximizeCRM Frontend/
+│   └── Frontend files
+│
+└── README.md
 ```
 
-## Main Modules
+---
 
-### 1. User Management
+# ER Diagram
 
-Manages application users and their basic information.
+The following diagram represents the main entities and relationships currently implemented in the backend.
 
-User roles include:
+```mermaid
+erDiagram
 
-- Admin
-- Sales Executive
-- Manager
+    USER {
+        Long id PK
+        String UserName
+        String UserEmail
+        String UserPassword
+        UserRole userRole
+        Long UserPhone
+        Boolean UserActive
+    }
 
-### 2. Customer Management
+    CUSTOMER {
+        Long id PK
+        String CustomerName
+        String CustomerEmail
+        String CustomerPhone
+        String CustomerAddress
+        String CustomerCity
+        CustomerType CustomerType
+        LocalDateTime CustomerCreatedAt
+    }
 
-Stores and manages customer information such as:
+    LEAD {
+        Long id PK
+        String LeadName
+        String LeadEmail
+        String LeadPhone
+        LeadSource leadSource
+        LeadStatus leadStatus
+        String LeadAssignedTo
+        LocalDateTime LeadCreatedAt
+    }
 
-- Customer name
-- Email
-- Phone
-- Address
-- City
-- Customer type
+    OPPORTUNITY {
+        Long id PK
+        String Title
+        String Description
+        Long Value
+        Status status
+        LocalDateTime expectedCloseDate
+        LocalDateTime CreatedAt
+    }
 
-### 3. Lead Management
+    CAMPAIGN {
+        Long id PK
+        String CampaignName
+        String CampaignDescription
+        LocalDate CampaignStartDate
+        LocalDate CampaignEndDate
+        Long CampaignBudget
+        CampaignStatus campaignStatus
+    }
 
-Manages potential customers and their requirements.
+    ACTIVITY {
+        Long id PK
+        String ActivityDescription
+        LocalDate ActivityScheduledAt
+        ActivityTitle activityTitle
+        ActivityStatus activityStatus
+    }
 
-Lead information includes:
+    PRODUCT {
+        Long id PK
+        String productName
+        String productDescription
+        Double productPrice
+        String productCategory
+        Double productStock
+        Double productDiscount
+        Double productTotal
+    }
 
-- Lead name
-- Email
-- Phone
-- Lead source
-- Lead status
-- Requirements
-- Assigned user
+    USER ||--o{ LEAD : manages
+    USER ||--o{ OPPORTUNITY : manages
+    USER ||--o{ ACTIVITY : performs
 
-### 4. Opportunity Management
+    CUSTOMER ||--o{ OPPORTUNITY : has
+    CUSTOMER ||--o{ ACTIVITY : has
 
-Manages sales opportunities associated with customers, leads, and users.
+    CAMPAIGN ||--o{ LEAD : contains
+    LEAD ||--o{ OPPORTUNITY : generates
 
-Opportunity information includes:
+    ACTIVITY }o--o{ PRODUCT : involves
+```
 
-- Title
-- Description
-- Value
-- Status
-- Expected closing date
+### Entity Relationships
 
-### 5. Campaign Management
+| Relationship | Type |
+|---|---|
+| User → Lead | One-to-Many |
+| User → Opportunity | One-to-Many |
+| User → Activity | One-to-Many |
+| Customer → Opportunity | One-to-Many |
+| Customer → Activity | One-to-Many |
+| Campaign → Lead | One-to-Many |
+| Lead → Opportunity | One-to-Many |
+| Activity ↔ Product | Many-to-Many |
 
-Manages marketing and sales campaigns.
+The `Activity` and `Product` relationship uses the `activity_product` join table.
 
-Campaign information includes:
+> **Note:** `UserRole` is part of the User entity, but role-based authorization is not currently enforced by the security configuration. The application currently uses JWT authentication for protected endpoints.
 
-- Campaign name
-- Description
-- Start date
-- End date
-- Budget
-- Campaign status
+---
 
-### 6. Activity Management
+# Authentication & Security
 
-Tracks CRM activities such as:
+MaximizeCRM uses JWT-based authentication with Spring Security.
 
-- Calls
-- Meetings
-- Follow-ups
+### Login
 
-Activities can be associated with customers, users, and products.
+```text
+POST /api/auth/login
+```
 
-### 7. Product Management
-
-Manages products with information such as:
-
-- Product name
-- Description
-- Price
-- Category
-- Stock
-- Discount
-- Total value
-
-## Authentication
-
-MaximizeCRM uses **JWT (JSON Web Token)** authentication.
-
-The login endpoint generates a JWT token after successful authentication.
-
-Protected API requests require the token in the following format:
+A successful login returns a JWT token, which is sent with protected requests:
 
 ```text
 Authorization: Bearer <JWT_TOKEN>
 ```
 
-User registration and authentication endpoints are available without prior authentication.
+The current security configuration provides:
 
-## Database
+- Public user registration and login endpoints
+- CRM endpoints protected by a valid JWT
+- Public access to Swagger/OpenAPI
+- Stateless session management
+- An unauthorized response for invalid or missing authentication
 
-The application uses **PostgreSQL** as its primary database.
+<!-- TODO: confirm whether Swagger is really public or needs a token, and correct the bullet above if not. -->
 
-Database configuration is maintained locally in the Spring Boot application configuration.
+---
 
-The project also contains a `database` folder with the database documentation and project submission materials.
+# API Documentation
 
-## Running the Backend
+Swagger/OpenAPI is integrated into the backend for API documentation and testing.
 
-### Prerequisites
-
-Make sure the following are installed:
-
-- Java 17
-- PostgreSQL
-- Git
-
-### Steps
-
-1. Clone the repository:
-
-```bash
-git clone https://github.com/Agrima0408/MaximizeCRM.git
-```
-
-2. Open the backend directory:
-
-```bash
-cd "MaximizeCRM Backend"
-```
-
-3. Configure PostgreSQL and create a database named:
-
-```text
-MaximizeCRM
-```
-
-4. Configure the database username and password in the local Spring Boot configuration.
-
-5. Run the application using Maven Wrapper:
-
-**Windows:**
-
-```bash
-.\mvnw spring-boot:run
-```
-
-**Linux/macOS:**
-
-```bash
-./mvnw spring-boot:run
-```
-
-The backend runs on:
-
-```text
-http://localhost:8081
-```
-
-## Swagger API Documentation
-
-After starting the backend, Swagger UI can be accessed at:
+After starting the backend, open:
 
 ```text
 http://localhost:8081/swagger-ui/index.html
 ```
 
-Swagger provides an interactive interface for viewing and testing the REST APIs.
+### API Modules
 
-## API Base URL
+| Module | Base path | Purpose |
+|---|---|---|
+| Authentication | `/api/auth` | Login and JWT generation |
+| Users | `/api/users` | User registration and management |
+| Customers | `/api/customers` | Customer information |
+| Leads | `/api/leads` | Lead management and tracking |
+| Opportunities | `/api/opportunities` | Sales opportunities |
+| Campaigns | `/api/campaigns` | Campaign management |
+| Activities | `/api/activities` | CRM activities |
+| Products | `/api/products` | Product catalogue |
 
-```text
-http://localhost:8081/api
-```
+<!-- TODO: the base paths above (except /api/auth) are placeholders. Replace them with the real paths from your controllers. -->
 
-The application provides REST endpoints for:
-
-```text
-/api/users
-/api/customers
-/api/leads
-/api/opportunities
-/api/campaigns
-/api/activities
-/api/products
-/api/auth
-```
-
-## Validation and Error Handling
-
-The application uses Jakarta Bean Validation for validating API requests.
-
-Examples include:
-
-- Required fields
-- Valid email addresses
-- Non-negative numeric values
-- Valid enum values
-
-Validation errors are returned with an appropriate **HTTP 400 Bad Request** response.
-
-## Relationships
-
-The application implements relationships between major CRM entities, including:
-
-```text
-User ────────< Opportunity
-User ────────< Lead
-User ────────< Activity
-
-Customer ────< Opportunity
-Customer ────< Activity
-
-Lead ────────< Opportunity
-Campaign ────< Lead
-
-Activity >────< Product
-```
-
-JPA and Hibernate are used to manage these relationships.
-
-## Testing
-
-The backend contains tests for application functionality, validation, authentication, and database-related operations.
-
-H2 is used where an isolated test database is required.
-
-The project can be verified using:
+### Example: login and call a protected endpoint
 
 ```bash
-.\mvnw clean verify
+# 1. Log in and get a token
+curl -X POST http://localhost:8081/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user@example.com", "password": "yourPassword"}'
+
+# 2. Use the token on a protected endpoint
+curl http://localhost:8081/api/customers \
+  -H "Authorization: Bearer <JWT_TOKEN>"
 ```
 
-## Continuous Integration
+<!-- TODO: match the login request fields and add a sample response copied from Swagger. -->
 
-GitHub Actions is configured to automatically build and verify the backend whenever changes are pushed to the `main` branch or a pull request is created.
+---
 
-Workflow file:
+# Build & CI
+
+The backend uses Maven and includes the Maven Wrapper.
+
+```bash
+# Linux / macOS
+./mvnw clean verify
+
+# Windows
+.\mvnw.cmd clean verify
+```
+
+The project does not yet have an automated unit or integration test suite, so `clean verify` confirms that the backend builds, not that behaviour is tested.
+
+The GitHub Actions workflow (`.github/workflows/maven-build.yml`) runs on pushes to `main` and on pull requests targeting `main`. It checks out the repository, sets up Java 17, caches Maven dependencies, and runs `clean verify`.
+
+---
+
+# Run the Backend
+
+## Prerequisites
+
+- Java 17
+- PostgreSQL
+- Git
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Agrima0408/MaximizeCRM.git
+cd MaximizeCRM
+```
+
+### 2. Create the PostgreSQL database
+
+Create a database named:
 
 ```text
-.github/workflows/maven-build.yml
+MaximizeCRM
 ```
 
-The workflow:
+The database structure is documented in `database/database.yml`.
 
-1. Checks out the repository
-2. Sets up Java 17
-3. Uses Maven caching
-4. Builds and verifies the backend
+### 3. Configure the backend
 
-## Project Documentation
+Open:
 
-Additional project documentation and presentation materials are available in the:
+```text
+MaximizeCRM Backend/src/main/resources/application.properties
+```
+
+and set your local PostgreSQL credentials and JWT secret. Do not commit real passwords or secrets; use environment variables where possible.
+
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/MaximizeCRM
+spring.datasource.username=postgres
+spring.datasource.password=${DB_PASSWORD}
+
+jwt.secret=${JWT_SECRET}
+
+spring.jpa.hibernate.ddl-auto=update
+server.port=8081
+```
+
+<!-- TODO: replace jwt.secret with the exact property name your code reads, and add the expiry property if you have one. -->
+
+### 4. Start the backend
+
+From inside the `MaximizeCRM Backend` folder:
+
+```bash
+# Linux / macOS
+./mvnw spring-boot:run
+
+# Windows
+.\mvnw.cmd spring-boot:run
+```
+
+The backend runs on `http://localhost:8081`.
+
+---
+
+# Frontend
+
+The frontend is in the `MaximizeCRM Frontend` folder. Start the backend first, then open the main HTML file in a browser. The frontend calls the backend at `http://localhost:8081`.
+
+<!-- TODO: name the exact file to open (for example index.html or login.html). If you open it as a file:// page, confirm CORS is configured in the backend, otherwise the browser will block the API calls. If it is not, serve it with a simple local server or add CORS config, and say so here. -->
+
+---
+
+# Screenshots
+
+Screenshots of the application can be added to this section.
+
+### Login
+
+```markdown
+![Login](screenshots/login.png)
+```
+
+### Dashboard / Main Interface
+
+```markdown
+![Dashboard](screenshots/dashboard.png)
+```
+
+### Swagger API Documentation
+
+```markdown
+![Swagger](screenshots/swagger.png)
+```
+
+### Database
+
+```markdown
+![Database](screenshots/database.png)
+```
+
+Place the actual screenshot files inside a `screenshots` folder and update the filenames above accordingly.
+
+---
+
+# Database Documentation
+
+The `database` folder contains the database documentation:
 
 ```text
 database/
+├── database.yml
+├── Project-PPT
+└── Project-Report
 ```
 
-folder.
-
-This includes the project database documentation, presentation, and project report.
-
-## Author
-
-**Agrima Agarwal**
-
-## Repository
-
-GitHub Repository:
+`database.yml` documents the PostgreSQL database and the main tables used by the application:
 
 ```text
-https://github.com/Agrima0408/MaximizeCRM
+users
+product
+opportunity
+lead_requirement
+lead
+customer
+campaign
+activity_product
+activity
 ```
+
+<!-- TODO: lead_requirement is not in the ER diagram or the relationships table. Add it there, or add one line here explaining what it stores. -->
