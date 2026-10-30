@@ -7,7 +7,7 @@ import { resolve, sep } from "node:path";
 
 const PORT = Number(process.env.PORT ?? 3000);
 // Target Spring Boot backend explicitly at http://localhost:8081
-const BACKEND_URL = "http://localhost:8081";
+const BACKEND_URL = (process.env.BACKEND_URL ?? "http://localhost:8081").replace(/\/$/, "");
 const API_BASE_URL = "/api";
 const PUBLIC_DIR = resolve(import.meta.dir, "public");
 
