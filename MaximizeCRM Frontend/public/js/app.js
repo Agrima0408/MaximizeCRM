@@ -3,6 +3,7 @@ import { isAuthenticated, clearAuth, currentUserEmail } from "./auth.js";
 import { h, button, errorBox, icon } from "./ui.js";
 import { modules, navItems } from "./modules.js";
 import { renderLogin } from "./pages/login.js";
+import { renderRegister } from "./pages/register.js";
 import { renderDashboard } from "./pages/dashboard.js";
 
 const root = document.getElementById("app");
@@ -86,14 +87,19 @@ async function route() {
   const hash = location.hash.replace(/^#\//, "") || "dashboard";
   const name = hash.split("/")[0];
 
-  if (name === "login") {
-    if (isAuthenticated()) {
-      location.hash = "#/dashboard";
-      return;
-    }
-    renderLogin(root);
+  if (name === "login" || name === "register") {
+  if (isAuthenticated()) {
+    location.hash = "#/dashboard";
     return;
   }
+
+  if (name === "register") {
+    renderRegister(root);
+  } else {
+    renderLogin(root);
+  }
+  return;
+}
 
   if (!isAuthenticated()) {
     location.hash = "#/login";
