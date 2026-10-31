@@ -4,15 +4,28 @@
 
 MaximizeCRM is a Customer Relationship Management application for managing customers, leads, opportunities, campaigns, activities, and products through a secure REST API and a web frontend.
 
+## Live Deployment
+
+| Component | Link |
+|---|---|
+| **Live Application (Frontend)** | [https://maximizecrm.onrender.com](https://maximizecrm.onrender.com) |
+| **Backend API** | [https://maximizecrm-backend.onrender.com](https://maximizecrm-backend.onrender.com) |
+| **GitHub Repository** | [Agrima0408/MaximizeCRM](https://github.com/Agrima0408/MaximizeCRM) |
+| **Project Report** | [MaximizeCRM IEEE Report](MaximizeCRM_IEEE_Report.pdf) |
+
+The frontend is deployed on Render and communicates with the separately deployed Spring Boot backend.
+
 ---
 
 ## Features
 
 - User registration and login with JWT-based authentication
-- CRUD for customers, leads, opportunities, campaigns, activities, and products
-- Linked CRM data: users manage leads and opportunities, campaigns contain leads, leads generate opportunities
+- CRUD operations for customers, leads, opportunities, campaigns, activities, and products
+- Linked CRM data: users manage leads and opportunities, campaigns contain leads, and leads generate opportunities
 - Input validation and global exception handling
-- Swagger/OpenAPI documentation for every endpoint
+- Swagger/OpenAPI documentation for API documentation and testing
+- PostgreSQL database integration
+- Responsive web-based frontend
 
 ---
 
@@ -23,6 +36,7 @@ MaximizeCRM is a Customer Relationship Management application for managing custo
 | Backend | Java 17, Spring Boot 3.2.5, Spring Web, Spring Data JPA, Spring Security, Jakarta Bean Validation, JWT, Lombok, Maven |
 | Database | PostgreSQL 17, Hibernate / JPA |
 | Frontend | HTML, CSS, JavaScript |
+| Deployment | Render |
 | Tools | IntelliJ IDEA, Git, GitHub, GitHub Actions, Swagger / OpenAPI |
 
 ---
@@ -49,18 +63,24 @@ MaximizeCRM
 ├── MaximizeCRM Frontend/
 │   └── Frontend files
 │
+├── screenshots/
+│   ├── login.png
+│   ├── dashboard.png
+│   ├── swagger.png
+│   └── database.png
+│
+├── MaximizeCRM_IEEE_Report.pdf
 └── README.md
 ```
 
 ---
 
-# ER Diagram
+## Entity Relationship (ER) Diagram
 
-The following diagram represents the main entities and relationships currently implemented in the backend.
+The following diagram represents the main entities and relationships in the backend.
 
 ```mermaid
 erDiagram
-
     USER {
         Long id PK
         String UserName
@@ -160,81 +180,71 @@ erDiagram
 
 The `Activity` and `Product` relationship uses the `activity_product` join table.
 
-> **Note:** `UserRole` is part of the User entity, but role-based authorization is not currently enforced by the security configuration. The application currently uses JWT authentication for protected endpoints.
+**Note:** `UserRole` is part of the User entity. Role-based authorization is not currently enforced by the security configuration. The application uses JWT authentication for protected endpoints.
 
 ---
 
-# Authentication & Security
+## Authentication & Security
 
 MaximizeCRM uses JWT-based authentication with Spring Security.
 
 ### Login
 
-```text
+```http
 POST /api/auth/login
 ```
 
 A successful login returns a JWT token, which is sent with protected requests:
 
-```text
+```http
 Authorization: Bearer <JWT_TOKEN>
 ```
 
-The current security configuration provides:
+The security configuration provides:
 
 - Public user registration and login endpoints
-- CRM endpoints protected by a valid JWT
-- Public access to Swagger/OpenAPI
+- CRM endpoints protected by valid JWT authentication
 - Stateless session management
-- An unauthorized response for invalid or missing authentication
-
-<!-- TODO: confirm whether Swagger is really public or needs a token, and correct the bullet above if not. -->
+- Unauthorized responses for invalid or missing authentication
 
 ---
 
-# API Documentation
+## API Documentation
 
 Swagger/OpenAPI is integrated into the backend for API documentation and testing.
 
-After starting the backend, open:
+**Local Swagger URL:**
 
 ```text
 http://localhost:8081/swagger-ui/index.html
 ```
 
+**Deployed backend:**
+
+[https://maximizecrm-backend.onrender.com](https://maximizecrm-backend.onrender.com)
+
+If Swagger UI is enabled on the deployed backend, it can be accessed at:
+
+[https://maximizecrm-backend.onrender.com/swagger-ui/index.html](https://maximizecrm-backend.onrender.com/swagger-ui/index.html)
+
 ### API Modules
 
-| Module | Base path | Purpose |
-|---|---|---|
-| Authentication | `/api/auth` | Login and JWT generation |
-| Users | `/api/users` | User registration and management |
-| Customers | `/api/customers` | Customer information |
-| Leads | `/api/leads` | Lead management and tracking |
-| Opportunities | `/api/opportunities` | Sales opportunities |
-| Campaigns | `/api/campaigns` | Campaign management |
-| Activities | `/api/activities` | CRM activities |
-| Products | `/api/products` | Product catalogue |
+| Module | Purpose |
+|---|---|
+| Authentication | Login and JWT generation |
+| Users | User registration and management |
+| Customers | Customer information |
+| Leads | Lead management and tracking |
+| Opportunities | Sales opportunity management |
+| Campaigns | Campaign management |
+| Activities | CRM activities |
+| Products | Product catalogue |
 
-<!-- TODO: the base paths above (except /api/auth) are placeholders. Replace them with the real paths from your controllers. -->
-
-### Example: login and call a protected endpoint
-
-```bash
-# 1. Log in and get a token
-curl -X POST http://localhost:8081/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email": "user@example.com", "password": "yourPassword"}'
-
-# 2. Use the token on a protected endpoint
-curl http://localhost:8081/api/customers \
-  -H "Authorization: Bearer <JWT_TOKEN>"
-```
-
-<!-- TODO: match the login request fields and add a sample response copied from Swagger. -->
+Refer to the backend controllers and Swagger documentation for the exact endpoint mappings.
 
 ---
 
-# Build & CI
+## Build & CI
 
 The backend uses Maven and includes the Maven Wrapper.
 
@@ -246,15 +256,15 @@ The backend uses Maven and includes the Maven Wrapper.
 .\mvnw.cmd clean verify
 ```
 
-The project does not yet have an automated unit or integration test suite, so `clean verify` confirms that the backend builds, not that behaviour is tested.
+The project does not yet have an automated unit or integration test suite, so `clean verify` confirms that the backend builds, not that application behaviour is tested.
 
 The GitHub Actions workflow (`.github/workflows/maven-build.yml`) runs on pushes to `main` and on pull requests targeting `main`. It checks out the repository, sets up Java 17, caches Maven dependencies, and runs `clean verify`.
 
 ---
 
-# Run the Backend
+## Run the Backend Locally
 
-## Prerequisites
+### Prerequisites
 
 - Java 17
 - PostgreSQL
@@ -285,7 +295,9 @@ Open:
 MaximizeCRM Backend/src/main/resources/application.properties
 ```
 
-and set your local PostgreSQL credentials and JWT secret. Do not commit real passwords or secrets; use environment variables where possible.
+Configure your local PostgreSQL credentials and JWT secret. Do not commit real passwords or secrets.
+
+Example configuration:
 
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/MaximizeCRM
@@ -297,8 +309,6 @@ jwt.secret=${JWT_SECRET}
 spring.jpa.hibernate.ddl-auto=update
 server.port=8081
 ```
-
-<!-- TODO: replace jwt.secret with the exact property name your code reads, and add the expiry property if you have one. -->
 
 ### 4. Start the backend
 
@@ -312,15 +322,27 @@ From inside the `MaximizeCRM Backend` folder:
 .\mvnw.cmd spring-boot:run
 ```
 
-The backend runs on `http://localhost:8081`.
+The backend runs locally at:
+
+```text
+http://localhost:8081
+```
 
 ---
 
-# Frontend
+## Frontend
 
-The frontend is in the `MaximizeCRM Frontend` folder. Start the backend first, then open the main HTML file in a browser. The frontend calls the backend at `http://localhost:8081`.
+The frontend is located in the `MaximizeCRM Frontend` folder.
 
-<!-- TODO: name the exact file to open (for example index.html or login.html). If you open it as a file:// page, confirm CORS is configured in the backend, otherwise the browser will block the API calls. If it is not, serve it with a simple local server or add CORS config, and say so here. -->
+To run the application locally:
+
+1. Start the Spring Boot backend.
+2. Open the frontend's main HTML file in a browser.
+3. Ensure the frontend API configuration points to the local backend at `http://localhost:8081`.
+
+For the deployed application, visit:
+
+**[https://maximizecrm.onrender.com](https://maximizecrm.onrender.com)**
 
 ---
 
@@ -344,7 +366,7 @@ The frontend is in the `MaximizeCRM Frontend` folder. Start the backend first, t
 
 ---
 
-# Database Documentation
+## Database Documentation
 
 The `database` folder contains the database documentation:
 
@@ -369,4 +391,10 @@ activity_product
 activity
 ```
 
-<!-- TODO: lead_requirement is not in the ER diagram or the relationships table. Add it there, or add one line here explaining what it stores. -->
+---
+
+## Author
+
+**MaximizeCRM – Customer Relationship Management System**
+
+Developed using Java, Spring Boot, PostgreSQL, HTML, CSS, and JavaScript.
